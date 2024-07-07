@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, url_for, redirect
+from flask import Flask, flash, make_response, render_template, request, url_for, redirect
 
 from hexlet_flask import users
 
@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret key'
 
-users_list = ['mike', 'mishel', 'adel', 'keks', 'kamila']
+# users_list = ['mike', 'mishel', 'adel', 'keks', 'kamila']
 
 
 @app.route('/')
@@ -17,12 +17,13 @@ def index():
 @app.get('/users')
 def users_get():
     term = request.args.get('term')
+    users_list  = request.cookies.to_dict()
+    filtred_users = users.filter_users(users_list, term)
 
     return render_template(
         'users/index.html',
-        users=users,
         search=term,
-        filtred_users=users.filter_users(users_list, term)
+        filtred_users=filtred_users
     )
 
 
@@ -37,9 +38,10 @@ def post_users():
           errors=errors,
         ), 422
     
-    # repo.save(user)
+    response = make_response(redirect(url_for('users_get'), code=302))
+    response.set_cookie(users.get_id(), users.encoded_user(user))
     flash('Пользователь успешно добавлен', 'success')
-    return redirect(url_for('users_get'), code=302)
+    return response
 
 @app.get('/users/int:<id>')
 def user_id(id):
@@ -63,3 +65,10 @@ def get_user():
         user=user,
         errors=errors
     )
+    
+
+@app.post('/users/clean/int:<id>')
+def users_clean(id):
+    response = redirect(url_for('users_get'))
+    response.delete_cookie(str(id))
+    return response

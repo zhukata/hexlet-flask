@@ -24,10 +24,11 @@
 
 <body>
   <div class="row">
-    <h1 class="display-3">Пользователи</h1>
+    <a href="{{ url_for('index') }}">Главная</a>
+    <a href="{{ url_for('users_get') }}"><h1 class="display-3">Пользователи</h1></a>
     <form action="{{ url_for('users_get') }}" method="get" class="d-flex justify-content-center">
       <label for="text" class="visually-hidden">search</label>
-      <input type="search" name="term" placeholder="Начните вводить имя" value="{{ search }}"
+      <input type="search" name="term" placeholder="Начните вводить имя" value="{{ search|default('')}}"
         class="form-control form-control-lg" required>
       <input type="submit" value="Search" />
     </form>
@@ -37,7 +38,8 @@
       {% for user in filtred_users %}
       <tr>
         <td>
-          {{ user }}
+          {{ user.name }}
+          <form action="{{ url_for('users_clean' , id=user.id) }}" method="POST"><input type="submit" value="Удалить пользователя"></form>
         </td>
         {% endfor %}
     </table>
