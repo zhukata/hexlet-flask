@@ -1,4 +1,4 @@
-<form action="/users" method="post">
+<form action="{{ url_for('post_users') }}" method="post">
     <div>
       <label>
         Имя
@@ -8,7 +8,15 @@
         <div>{{ errors['name'] }}</div>
       {% endif %}
     </div>
-
-    </div>
+    <div>
+      <label>
+        Email
+        <input type="email" required name="email" value="{{ user.email }}">
+      </label>
+      {% if errors['email'] %}
+        <div>{{ errors['email'] }}</div>
+      {% endif %}
+      </div>
+    <div>
     <input type="submit" value="Sign Up">
   </form>

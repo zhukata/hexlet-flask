@@ -8,7 +8,10 @@
     {% block sidebar %}
         <ul>
             <li><a href="{{ url_for('index') }}">Главная</a></li>
+
             <li><a href="{{ url_for('users_get') }}">Пользователи</a></li>
+            
+            <li><a href="{{ url_for('get_user') }}">Добавить пользователя</a></li>
         </ul>
     {% endblock %}
 </div>
