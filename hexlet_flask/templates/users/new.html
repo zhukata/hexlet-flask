@@ -1,0 +1,14 @@
+<form action="/users" method="post">
+    <div>
+      <label>
+        Имя
+        <input type="text" name="name" value="{{ user.name }}">
+      </label>
+      {% if errors['name'] %}
+        <div>{{ errors['name'] }}</div>
+      {% endif %}
+    </div>
+
+    </div>
+    <input type="submit" value="Sign Up">
+  </form>
