@@ -1,3 +1,9 @@
+{% extends "index.html" %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
 <form action="{{ url_for('post_users') }}" method="post">
     <div>
       <label>
@@ -20,3 +26,4 @@
     <div>
     <input type="submit" value="Sign Up">
   </form>
+{% endblock %}

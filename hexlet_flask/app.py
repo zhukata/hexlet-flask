@@ -1,4 +1,13 @@
-from flask import Flask, flash, make_response, render_template, request, url_for, redirect
+from flask import (
+    Flask,
+    flash,
+    make_response,
+    render_template,
+    request,
+    session,
+    url_for,
+    redirect,
+)
 
 from hexlet_flask import users
 
@@ -6,12 +15,14 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret key'
 
-# users_list = ['mike', 'mishel', 'adel', 'keks', 'kamila']
-
 
 @app.route('/')
 def index():
-    return render_template('form.html')
+    current_user = session.get('user')
+    return render_template(
+        'index.html',
+        current_user=current_user,
+        )
 
 
 @app.get('/users')
@@ -21,7 +32,7 @@ def users_get():
     filtred_users = users.filter_users(users_list, term)
 
     return render_template(
-        'users/index.html',
+        'users/users.html',
         search=term,
         filtred_users=filtred_users
     )
@@ -53,7 +64,7 @@ def user_id(id):
 
 
 @app.get('/users/new')
-def get_user():
+def new_user():
     user = {
         'name': '',
         'email' : ''
@@ -72,3 +83,21 @@ def users_clean(id):
     response = redirect(url_for('users_get'))
     response.delete_cookie(str(id))
     return response
+
+
+@app.post('/session/new')
+def new_session():
+    data = request.form.to_dict()
+    user = users.get_user(data, users.users_list)
+    if user:
+        session['user'] = user
+    else:
+        flash('Wrong email or name.')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/session/delete', methods = ['POST', 'DELETE'])
+def delete_session():
+    session.pop('user')
+    return redirect(url_for('index'))

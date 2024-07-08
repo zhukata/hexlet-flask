@@ -2,6 +2,15 @@ import uuid
 import json
 
 
+users_list = [
+    {'name': 'mike', 'email': 'mike@12345.com'},
+    {'name': 'mishel', 'email': 'mishel@12345.com'},
+    {'name': 'adel', 'email': 'adel@12345.com'},
+    {'name': 'keks', 'email': 'keks@12345.com'},
+    {'name': 'kamila', 'email': 'kamila@12345.com'},
+]
+
+
 def filter_users(users, term):
     filtred_users = []
 
@@ -39,3 +48,11 @@ def get_id():
 
 def encoded_user(user):
     return json.dumps({'name': user['name'], 'email': user['email']})
+
+
+def get_user(form_data, repo):
+    name = form_data['name']
+    email = form_data['email']
+    for user in repo:
+        if user['name'] == name and user['email'] == email:
+            return user
