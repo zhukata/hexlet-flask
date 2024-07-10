@@ -28,7 +28,7 @@ def index():
 @app.get('/users')
 def users_get():
     term = request.args.get('term')
-    users_list  = request.cookies.to_dict()
+    users_list = request.cookies.to_dict().get('users', [])
     filtred_users = users.filter_users(users_list, term)
 
     return render_template(
@@ -48,11 +48,12 @@ def post_users():
           user=user,
           errors=errors,
         ), 422
-    
+
     response = make_response(redirect(url_for('users_get'), code=302))
-    response.set_cookie(users.get_id(), users.encoded_user(user))
+    response.set_cookie('users', users.encoded_user(user))
     flash('Пользователь успешно добавлен', 'success')
     return response
+
 
 @app.get('/users/int:<id>')
 def user_id(id):
@@ -67,7 +68,7 @@ def user_id(id):
 def new_user():
     user = {
         'name': '',
-        'email' : ''
+        'email': ''
     }
     errors = {}
 
@@ -76,7 +77,7 @@ def new_user():
         user=user,
         errors=errors
     )
-    
+
 
 @app.post('/users/clean/int:<id>')
 def users_clean(id):
@@ -97,7 +98,7 @@ def new_session():
     return redirect(url_for('index'))
 
 
-@app.route('/session/delete', methods = ['POST', 'DELETE'])
+@app.route('/session/delete', methods=['POST', 'DELETE'])
 def delete_session():
     session.pop('user')
     return redirect(url_for('index'))

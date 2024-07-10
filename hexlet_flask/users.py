@@ -21,15 +21,18 @@ def filter_users(users, term):
         term = ""
 
     print(users)
-    for id, user in users.items():
+    decode_user = json.loads(users)
+    print(decode_user)
+    for id, user in decode_user.items():
         print(type(user))
         print(user)
-        if user:
-            decode_user = json.loads(user)
-    
-        if decode_user.get('name').lower().startswith(term.lower()):
+        if user.get("name").lower().startswith(term.lower()):
             filtred_users.append(
-                {"id": id, "name": decode_user["name"], "email": decode_user["email"]}
+                {
+                    "id": id,
+                    "name": user["name"],
+                    "email": user["email"],
+                }
             )
     return filtred_users
 
@@ -46,8 +49,9 @@ def validate(user):
 def get_id():
     return str(uuid.uuid4())
 
+
 def encoded_user(user):
-    return json.dumps({'name': user['name'], 'email': user['email']})
+    return json.dumps({get_id(): {'name': user['name'], 'email': user['email']}})
 
 
 def get_user(form_data, repo):

@@ -18,6 +18,7 @@
   <div class="row">
     <a href="{{ url_for('index') }}">Главная</a>
     <a href="{{ url_for('users_get') }}"><h1 class="display-3">Пользователи</h1></a>
+    
     <form action="{{ url_for('users_get') }}" method="get" class="d-flex justify-content-center">
       <label for="text" class="visually-hidden">search</label>
       <input type="search" name="term" placeholder="Начните вводить имя" value="{{ search|default('')}}"
